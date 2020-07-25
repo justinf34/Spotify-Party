@@ -1,0 +1,18 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.MainHeader {
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.MainBody {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}

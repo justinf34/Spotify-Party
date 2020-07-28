@@ -20,8 +20,12 @@ export default function Login() {
         To join the party, please login using your spotify account{" "}
         <Emoji symbol="😊" />
       </Typography>
-
-      <MyButton variant="contained">Login</MyButton>
+      <Typography variant="subtitle2">
+        <b>Only premium users!!!</b> <Emoji symbol="🧐" />
+      </Typography>
+      <MyButton variant="contained" href="http://localhost:8888/login">
+        Login
+      </MyButton>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "@material-ui/core";
-import Emoji from "./Emoji";
+import Emoji from "../Components/Emoji";
 import Button from "@material-ui/core/Button";
 import { styled } from "@material-ui/core/styles";
 

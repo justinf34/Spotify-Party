@@ -7,13 +7,22 @@ import {
   createMuiTheme,
 } from "@material-ui/core";
 import Emoji from "./Components/Emoji";
-import Login from "./Components/Login";
-import LoggedIn from "./Components/LoggedIn";
+import Login from "./Pages/Login";
+import LoggedIn from "./Pages/LoggedIn";
 import Spotify from "spotify-web-api-js";
+import io from "socket.io-client";
 
 const spotifyWebApi = new Spotify();
+const SOCKET_IO_URL = "http://localhost:8889";
+const socket = io(SOCKET_IO_URL);
 
 const theme = createMuiTheme({
+  palette: {
+    // primary: purple,
+    secondary: {
+      main: "#1ED761",
+    },
+  },
   typography: {
     fontFamily: `"Montserrat", sans-serif`,
   },
@@ -30,9 +39,13 @@ export default class App extends Component {
     }
 
     this.state = {
+      access_token: accessToken,
       loggedIn: accessToken ? true : false,
       displayName: null,
       image: null,
+      socket: null,
+      room: null,
+      host: true,
     };
   }
 
@@ -65,7 +78,9 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    this.getUserData();
+    if (this.state.loggedIn) {
+      this.getUserData();
+    }
   }
 
   render() {
@@ -79,11 +94,12 @@ export default class App extends Component {
             </Typography>
           </header>
           <div className="MainBody">
-            {this.state.loggedIn ? (
+            {/* {this.state.loggedIn ? (
               <LoggedIn displayName={this.state.displayName} />
             ) : (
               <Login />
-            )}
+            )} */}
+            <LoggedIn displayName="pheeg" />
           </div>
         </div>
       </MuiThemeProvider>

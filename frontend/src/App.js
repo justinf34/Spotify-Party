@@ -11,6 +11,7 @@ import Login from "./Pages/Login";
 import LoggedIn from "./Pages/LoggedIn";
 import Spotify from "spotify-web-api-js";
 import io from "socket.io-client";
+import Room from "./Pages/Room";
 
 const spotifyWebApi = new Spotify();
 const SOCKET_IO_URL = "http://localhost:8889"; // Hide this later in frontend
@@ -84,7 +85,8 @@ export default class App extends Component {
    * Handles when user decides to create a new room
    */
   createRoomHandler() {
-    this.socket.emit("createNewRoom", this.socket.id);
+    // this.socket.emit("createNewRoom", this.socket.id);
+    this.setState({ room: "Test" });
   }
 
   /**
@@ -119,13 +121,15 @@ export default class App extends Component {
             </Typography>
           </header>
           <div className="MainBody">
-            {this.state.loggedIn ? (
+            {!this.state.loggedIn ? (
+              <Login />
+            ) : this.state.room ? (
+              <Room />
+            ) : (
               <LoggedIn
                 displayName={this.state.displayName}
                 onCreateRoom={this.createRoomHandler}
               />
-            ) : (
-              <Login />
             )}
           </div>
         </div>

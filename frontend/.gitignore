@@ -1,7 +1,7 @@
 #misc
 .DS_Store
+.env
 
-# frontend ignores
 # dependencies
 node_modules
 .pnp

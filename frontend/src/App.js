@@ -13,9 +13,9 @@ import Spotify from "spotify-web-api-js";
 import io from "socket.io-client";
 
 const spotifyWebApi = new Spotify();
-const SOCKET_IO_URL = "http://localhost:8889";
-const socket = io(SOCKET_IO_URL);
+const SOCKET_IO_URL = "http://localhost:8889"; // Hide this later in frontend
 
+// App theme
 const theme = createMuiTheme({
   palette: {
     // primary: purple,
@@ -31,11 +31,14 @@ const theme = createMuiTheme({
 export default class App extends Component {
   constructor(props) {
     super(props);
+
     const params = this.getHashParams();
     const accessToken = params.access_token;
+    this.socket = null;
 
     if (accessToken) {
       spotifyWebApi.setAccessToken(params.access_token);
+      this.socket = io(SOCKET_IO_URL);
     }
 
     this.state = {
@@ -43,23 +46,45 @@ export default class App extends Component {
       loggedIn: accessToken ? true : false,
       displayName: null,
       image: null,
-      socket: null,
       room: null,
       host: true,
     };
+
+    this.createRoomHandler = this.createRoomHandler.bind(this);
   }
 
   /**
    * Uses access token to get user's display name
    */
-  getUserData() {
-    spotifyWebApi.getMe().then((res) => {
-      console.log(res);
-      this.setState({
-        displayName: res.display_name,
-        image: res.images,
-      });
+  async initUser() {
+    // Getting user metadata
+    const user_data = await spotifyWebApi.getMe();
+    this.setState({
+      displayName: user_data.display_name,
+      image: user_data.images,
     });
+
+    /**
+     * When the user is connected to the main server
+     */
+    this.socket.on("connect", (data) => {
+      console.log("You have connected to the main server");
+      console.log(data);
+    });
+
+    /**
+     * Handler when user successfuly created a room
+     */
+    this.socket.on("roomCreated", (roomID) => {
+      console.log(roomID);
+    });
+  }
+
+  /**
+   * Handles when user decides to create a new room
+   */
+  createRoomHandler() {
+    this.socket.emit("createNewRoom", this.socket.id);
   }
 
   /**
@@ -79,7 +104,7 @@ export default class App extends Component {
 
   componentDidMount() {
     if (this.state.loggedIn) {
-      this.getUserData();
+      this.initUser();
     }
   }
 
@@ -94,12 +119,14 @@ export default class App extends Component {
             </Typography>
           </header>
           <div className="MainBody">
-            {/* {this.state.loggedIn ? (
-              <LoggedIn displayName={this.state.displayName} />
+            {this.state.loggedIn ? (
+              <LoggedIn
+                displayName={this.state.displayName}
+                onCreateRoom={this.createRoomHandler}
+              />
             ) : (
               <Login />
-            )} */}
-            <LoggedIn displayName="pheeg" />
+            )}
           </div>
         </div>
       </MuiThemeProvider>

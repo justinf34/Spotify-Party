@@ -24,7 +24,9 @@ export default function LoggedIn(props) {
       </div>
 
       <div style={{ flex: 1 }}>
-        <MyButton variant="contained">Create New Room</MyButton>
+        <MyButton variant="contained" onClick={props.onCreateRoom}>
+          Create New Room
+        </MyButton>
         <Typography variant="h5">OR </Typography>{" "}
         <form noValidate autoComplete="off">
           <TextField

@@ -1,17 +1,10 @@
 import React from "react";
-import Emoji from "../Components/Emoji";
-import { Typography, TextField } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import { styled } from "@material-ui/core/styles";
 
-const MyButton = styled(Button)({
-  background: "#1ED761",
-  border: 0,
-  borderRadius: 25,
-  color: "white",
-  height: 48,
-  padding: "0 50px",
-});
+import Emoji from "../Components/Emoji";
+import BigButton from "../Components/BigButton";
+import { Typography, TextField } from "@material-ui/core";
+
+import PropTypes from "prop-types";
 
 export default function LoggedIn(props) {
   console.log(props.displayName);
@@ -24,9 +17,7 @@ export default function LoggedIn(props) {
       </div>
 
       <div style={{ flex: 1 }}>
-        <MyButton variant="contained" onClick={props.onCreateRoom}>
-          Create New Room
-        </MyButton>
+        <BigButton label="Create New Room" onClick={props.onCreateRoom} />
         <Typography variant="h5">OR </Typography>{" "}
         <form noValidate autoComplete="off">
           <TextField
@@ -40,3 +31,7 @@ export default function LoggedIn(props) {
     </React.Fragment>
   );
 }
+
+LoggedIn.propTypes = {
+  displayName: PropTypes.string.isRequired,
+};

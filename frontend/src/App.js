@@ -1,17 +1,21 @@
 import React, { Component } from "react";
 import "./App.css";
-import "./Components/Emoji";
+
 import {
   Typography,
   MuiThemeProvider,
   createMuiTheme,
 } from "@material-ui/core";
+
 import Emoji from "./Components/Emoji";
 import Login from "./Pages/Login";
 import LoggedIn from "./Pages/LoggedIn";
+import Room from "./Pages/Room";
+
+import { getHashParams } from "./getHashParams";
+
 import Spotify from "spotify-web-api-js";
 import io from "socket.io-client";
-import Room from "./Pages/Room";
 
 const spotifyWebApi = new Spotify();
 const SOCKET_IO_URL = "http://localhost:8889"; // Hide this later in frontend
@@ -33,14 +37,12 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
-    const params = this.getHashParams();
+    const params = getHashParams();
     const accessToken = params.access_token;
     this.socket = null;
 
-    if (accessToken) {
-      spotifyWebApi.setAccessToken(params.access_token);
-      this.socket = io(SOCKET_IO_URL);
-    }
+    const accessTokenTest = window.localStorage.getItem("SP_AT");
+    console.log(accessTokenTest);
 
     this.state = {
       access_token: accessToken,
@@ -50,6 +52,11 @@ export default class App extends Component {
       room: null,
       host: true,
     };
+
+    if (accessToken) {
+      spotifyWebApi.setAccessToken(params.access_token); // Need to remove access token when logging out
+      // this.socket = io(SOCKET_IO_URL);
+    }
 
     this.createRoomHandler = this.createRoomHandler.bind(this);
   }
@@ -68,17 +75,17 @@ export default class App extends Component {
     /**
      * When the user is connected to the main server
      */
-    this.socket.on("connect", (data) => {
-      console.log("You have connected to the main server");
-      console.log(data);
-    });
+    // this.socket.on("connect", (data) => {
+    //   console.log("You have connected to the main server");
+    //   console.log(data);
+    // });
 
     /**
      * Handler when user successfuly created a room
      */
-    this.socket.on("roomCreated", (roomID) => {
-      console.log(roomID);
-    });
+    // this.socket.on("roomCreated", (roomID) => {
+    //   console.log(roomID);
+    // });
   }
 
   /**
@@ -87,21 +94,6 @@ export default class App extends Component {
   createRoomHandler() {
     // this.socket.emit("createNewRoom", this.socket.id);
     this.setState({ room: "Test" });
-  }
-
-  /**
-   * Obtains parameters from the hash of the URL
-   * @return Object
-   */
-  getHashParams() {
-    var hashParams = {};
-    var e,
-      r = /([^&;=]+)=?([^&;]*)/g,
-      q = window.location.hash.substring(1);
-    while ((e = r.exec(q))) {
-      hashParams[e[1]] = decodeURIComponent(e[2]);
-    }
-    return hashParams;
   }
 
   componentDidMount() {
@@ -116,7 +108,7 @@ export default class App extends Component {
         <div className="App">
           <header className="MainHeader">
             <Typography variant="h2" gutterBottom>
-              Spotify Listen Party <Emoji symbol="🥳" />
+              Spotify Party <Emoji symbol="🥳" />
               <Emoji symbol="🎵" />
             </Typography>
           </header>

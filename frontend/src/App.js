@@ -12,7 +12,7 @@ import Login from "./Pages/Login";
 import LoggedIn from "./Pages/LoggedIn";
 import Room from "./Pages/Room";
 
-import { getHashParams } from "./getHashParams";
+import { getHashParams } from "./Utils/Helper";
 
 import Spotify from "spotify-web-api-js";
 import io from "socket.io-client";
@@ -55,6 +55,7 @@ export default class App extends Component {
 
     if (accessToken) {
       spotifyWebApi.setAccessToken(params.access_token); // Need to remove access token when logging out
+      window.history.replaceState({}, null, "/"); // Replace the history entry to remove the auth code from the url bar
       // this.socket = io(SOCKET_IO_URL);
     }
 

@@ -3,16 +3,15 @@ import React from "react";
 import Emoji from "../Components/Emoji";
 import BigButton from "../Components/BigButton";
 import { Typography, TextField } from "@material-ui/core";
+import { useAuth } from "../Auth/Context";
 
-import PropTypes from "prop-types";
-
-export default function LoggedIn(props) {
-  console.log(props.displayName);
+export default function Home(props) {
+  const { user } = useAuth();
   return (
     <React.Fragment>
       <div style={{ flex: 1 }}>
         <Typography variant="h5">
-          <b>{props.displayName}</b> you are now logged in <Emoji symbol="😘" />
+          <b>{user}</b> you are now logged in <Emoji symbol="😘" />
         </Typography>
       </div>
 
@@ -31,7 +30,3 @@ export default function LoggedIn(props) {
     </React.Fragment>
   );
 }
-
-LoggedIn.propTypes = {
-  displayName: PropTypes.string.isRequired,
-};

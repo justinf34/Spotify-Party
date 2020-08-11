@@ -1,12 +1,15 @@
-import React from "react";
+import React, { Suspense } from "react";
 import "./App.css";
 import { useAuth } from "./Auth/Context";
 
 import { Typography } from "@material-ui/core";
 
 import Emoji from "./Components/Emoji";
-import Login from "./Pages/Login";
-import Home from "./Pages/Home";
+// import Login from "./Pages/Login";
+// import Home from "./Pages/Home";
+
+const Login = React.lazy(() => import("./Pages/Login"));
+const Home = React.lazy(() => import("./Pages/Home"));
 
 export default function App() {
   const { loggedIn } = useAuth();
@@ -18,7 +21,17 @@ export default function App() {
           <Emoji symbol="🎵" />
         </Typography>
       </header>
-      <div className="MainBody">{loggedIn ? <Home /> : <Login />}</div>
+      <div className="MainBody">
+        <Suspense
+          fallback={
+            <div>
+              <img src={require("./assets/loading.svg")} alt="loading..." />
+            </div>
+          }
+        >
+          {loggedIn ? <Home /> : <Login />}
+        </Suspense>
+      </div>
     </div>
   );
 }

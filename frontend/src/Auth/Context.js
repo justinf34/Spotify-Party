@@ -8,6 +8,18 @@ export function AuthProvider({ children }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
+  /**
+   *
+   */
+  const logout = () => {
+    //clear Cookies
+    Cookies.set("spotifyAuthToken", undefined);
+    Cookies.set("spotifyRefreshToken", undefined);
+
+    setLoggedIn(false);
+    setUser(null);
+  };
+
   useEffect(() => {
     const params = getHashParams();
     window.history.replaceState({}, null, "/"); // Replace the history entry to remove the auth code from the url bar
@@ -30,6 +42,7 @@ export function AuthProvider({ children }) {
       value={{
         loggedIn,
         user,
+        logout,
       }}
     >
       {children}

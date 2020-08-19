@@ -5,11 +5,8 @@ import { useAuth } from "./Auth/Context";
 import { Typography } from "@material-ui/core";
 
 import Emoji from "./Components/Emoji";
-// import Login from "./Pages/Login";
-// import Home from "./Pages/Home";
-
 const Login = React.lazy(() => import("./Pages/Login"));
-const Home = React.lazy(() => import("./Pages/Home"));
+const Main = React.lazy(() => import("./Pages/Main"));
 
 export default function App() {
   const { loggedIn } = useAuth();
@@ -29,7 +26,7 @@ export default function App() {
             </div>
           }
         >
-          {loggedIn ? <Home /> : <Login />}
+          {loggedIn ? <Main /> : <Login />}
         </Suspense>
       </div>
     </div>

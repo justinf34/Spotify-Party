@@ -1,13 +1,14 @@
 import React from "react";
-import { Typography } from "@material-ui/core";
-import Emoji from "../Components/Emoji";
+import { useParams } from "react-router-dom";
+
+import Chat from "../Components/Chat";
+import { Paper, Typography } from "@material-ui/core";
 
 export default function Room() {
+  const { roomID } = useParams();
   return (
-    <div className="roomPage">
-      <Typography varinat="subtitle1">
-        You are now in a room <Emoji symbol="👅" />
-      </Typography>
-    </div>
+    <React.Fragment>
+      <Chat />
+    </React.Fragment>
   );
 }

@@ -1,3 +1,4 @@
+// Express set up
 const express = require("express");
 const app = express();
 
@@ -5,36 +6,48 @@ const app = express();
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 
-const Manager = require("./src/RoomManager.js");
-const RoomManager = new Manager();
+// Setting up manager
+const RoomManager = require("./src/RoomManager.js");
+const { getMaxListeners } = require("process");
+const roomManager = RoomManager();
 
 app.use(express.static(__dirname + "/public"));
 
 io.on("connection", function (socket) {
   console.log("A user connected with id", socket.id);
 
-  /**
-   * Handling the creation of new rooms
-   */
-  socket.on("createNewRoom", async (clientName) => {
-    console.log("user", clientID, "wants to create a new Room");
+  socket.on("test", (msg) => {
+    console.log("client: " + msg);
+    socket.emit("canJoin", "Hello");
+  });
 
-    RoomManager.createNewRoom(socket.id, clientName).then((res) => {
+  /**
+   * Handler when a client request to create a new room
+   *
+   */
+  socket.on("createRoom", (client_name) => {
+    roomManager.createNewRoom(socket.id, client_name).then((res) => {
       if (res) {
+        socket.emit("join", { room_id: res, host: true });
         socket.join(res);
+      } else {
+        socket.emit("join", null);
       }
-      io.to(socket.id).emit("roomCreated", res);
     });
   });
 
   /**
-   * Handler when a user disconnects from the server
+   * Handler when a client disconnects from the server
    */
   socket.on("disconnect", function () {
-    console.log("A user disconnected");
+    console.log("Client disconnect... " + socket.id);
+    console.log(socket.rooms);
   });
 });
 
-http.listen(8889, function () {
-  console.log("listening on port 8889");
+// Port configuration
+let port = process.env.PORT || 8889;
+http.listen(port, (err) => {
+  if (err) throw err;
+  console.log(`Main server listening on port ${port}`);
 });

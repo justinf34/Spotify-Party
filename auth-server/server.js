@@ -1,7 +1,6 @@
 /**
  * This is an authorization server that performs the Authorization
- * Code oAuth2 flow to authenticate against Spotify accouts
- *
+ * Code oAuth2 flow to authenticate against Spotify accounts
  */
 
 let express = require("express"); // Express web server framework
@@ -158,5 +157,7 @@ app.get("/refresh_token", function (req, res) {
 });
 
 let port = process.env.PORT || 8888;
-console.log(`Listening on port ${port}. Go /login to initiate auth flow`);
-app.listen(port);
+app.listen(port, (err) => {
+  if (err) throw err;
+  console.log(`Listening on port ${port}. Go /login to initiate auth flow`);
+});

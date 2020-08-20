@@ -3,8 +3,10 @@ import "./App.css";
 import { useAuth } from "./Auth/Context";
 
 import { Typography } from "@material-ui/core";
+import PrivateRoute from "./Auth/PrivateRoute";
 
 import Emoji from "./Components/Emoji";
+// import { BrowserRouter, Switch, Route } from "react-router-dom";
 const Login = React.lazy(() => import("./Pages/Login"));
 const Main = React.lazy(() => import("./Pages/Main"));
 
@@ -26,6 +28,12 @@ export default function App() {
             </div>
           }
         >
+          {/* <BrowserRouter>
+            <Switch>
+              <PrivateRoute exact path="/" component={Main} />
+              <Route exact paht="/login" component={Login} />
+            </Switch>
+          </BrowserRouter> */}
           {loggedIn ? <Main /> : <Login />}
         </Suspense>
       </div>

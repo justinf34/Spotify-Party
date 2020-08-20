@@ -9,11 +9,7 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
       <Route
         {...rest}
         render={(routeProps) =>
-          loggedIn ? (
-            <RouteComponent {...routeProps} />
-          ) : (
-            <Redirect to={"/login"} />
-          )
+          loggedIn ? <RouteComponent {...routeProps} /> : <Redirect to={"/"} />
         }
       />
     </React.Fragment>

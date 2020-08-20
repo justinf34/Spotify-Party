@@ -14,15 +14,26 @@ export default function () {
     alert("received socket error: ", err);
   });
 
-  function createRoom({ clientID, clientName }) {
-    socket.emit("createRoom", { clientID, clientName });
+  function createRoom(clientName) {
+    socket.emit("createRoom", clientName);
   }
 
-  function joinRoom(roomID, { clientID, clientName }) {
-    socket.emit("joinRoom", { clientID, clientName });
+  function joinRoomHandler(onJoinRoom) {
+    socket.on("join", onJoinRoom);
   }
 
-  function createRoomHandler(onRoomCreated) {
-    socket.on("roomCreated", onRoomCreated);
+  function testServer(msg) {
+    socket.emit("test", msg);
   }
+
+  function disconnect() {
+    socket.close();
+  }
+
+  return {
+    createRoom,
+    testServer,
+    disconnect,
+    joinRoomHandler,
+  };
 }

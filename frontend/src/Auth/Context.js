@@ -15,7 +15,6 @@ export function AuthProvider({ children }) {
     //clear Cookies
     Cookies.set("spotifyAuthToken", undefined);
     Cookies.set("spotifyRefreshToken", undefined);
-
     setLoggedIn(false);
     setUser(null);
   };

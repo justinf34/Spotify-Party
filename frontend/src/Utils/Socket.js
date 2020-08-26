@@ -18,8 +18,25 @@ export default function () {
     socket.emit("createRoom", clientName);
   }
 
-  function joinRoomHandler(onJoinRoom) {
+  function registerJoinHandler(onJoinRoom) {
     socket.on("join", onJoinRoom);
+  }
+
+  function unregisterJoinHandler() {
+    console.log("Unregistered join handler");
+    socket.off("join");
+  }
+
+  function registerMsgReceiver(onMessageReceive) {
+    socket.on("message", onMessageReceive);
+  }
+
+  function unregsisterMsgReceiver() {
+    socket.off("message");
+  }
+
+  function onSendMessage(roomID, msg, cb) {
+    socket.to(roomID).emit("message", msg, cb);
   }
 
   function testServer(msg) {
@@ -34,6 +51,10 @@ export default function () {
     createRoom,
     testServer,
     disconnect,
-    joinRoomHandler,
+    registerJoinHandler,
+    unregisterJoinHandler,
+    registerMsgReceiver,
+    unregsisterMsgReceiver,
+    onSendMessage,
   };
 }

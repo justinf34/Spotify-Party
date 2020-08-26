@@ -3,10 +3,14 @@ import React, { Component } from "react";
 import { AuthContext } from "../Auth/Context";
 
 import Emoji from "../Components/Emoji";
-import BigButton from "../Components/BigButton";
+import RoundedBtn1 from "../Components/RoundedBtn1";
 import { Typography, TextField, Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 
+/**
+ * Alert Notification Component
+ * @param {object} props
+ */
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -27,12 +31,14 @@ class RoomSelect extends Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
+  // Handler for closing error notification
   handleClose(event, reason) {
     this.setState({ alertOpen: false });
   }
 
+  // Handler request of room creation by the client
   onCreateRoom() {
-    this.props.onCreateRoom("hello");
+    this.props.onCreateRoom(this.context.user);
     this.setState({
       loaderOn: true,
     });
@@ -40,11 +46,14 @@ class RoomSelect extends Component {
 
   // Handler on join room attempt
   onJoinRoom(res) {
+    console.log("joinRoom Received!");
+    console.log(res);
     if (res) {
-      this.props.history.replace({
-        pathname: `/room/${res.room_id}`,
-        state: { host: res.host },
-      });
+      // this.props.history.replace({
+      //   pathname: `/room/${res.room_id}`,
+      //   state: { host: res.host },
+      // });
+      this.props.history.push("/room/8888");
     } else {
       this.setState({
         loaderOn: false,
@@ -53,25 +62,29 @@ class RoomSelect extends Component {
     }
   }
 
-  // Handler when the user wants to log out
+  // Handler for client logout
   onLogout() {
-    this.props.onLogout(); // Disconnect socket manually
+    this.props.onDisconnect(); // Disconnect socket manually
     this.context.logout(); // clear cookies and logout user
   }
 
   componentDidMount() {
-    this.props.joinRoomHandler(this.onJoinRoom);
+    this.props.registerJoinHandler(this.onJoinRoom);
+  }
+
+  componentWillUnmount() {
+    this.props.unregisterJoinHandler(); // Disable joinRoomHandler
   }
 
   render() {
     return (
-      <React.Fragment>
+      <div className="RoomSelectLayout">
         <div style={{ flex: 1 }}>
           <Typography variant="h5">
             <b>{this.context.user}</b> you are now logged in{" "}
             <Emoji symbol="😘" />
           </Typography>
-          <BigButton label="Logout" onClick={this.onLogout} />
+          <RoundedBtn1 label="Logout" onClick={this.onLogout} />
         </div>
 
         <div style={{ flex: 1 }}>
@@ -82,7 +95,10 @@ class RoomSelect extends Component {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <BigButton label="Create New Room" onClick={this.onCreateRoom} />
+              <RoundedBtn1
+                label="Create New Room"
+                onClick={this.onCreateRoom}
+              />
               <Typography variant="h5">OR </Typography>{" "}
               <form noValidate autoComplete="off">
                 <TextField
@@ -105,7 +121,7 @@ class RoomSelect extends Component {
             Cannot Join/Create Server <Emoji symbol="😓" />
           </Alert>
         </Snackbar>
-      </React.Fragment>
+      </div>
     );
   }
 }

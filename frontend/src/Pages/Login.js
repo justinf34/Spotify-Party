@@ -2,9 +2,9 @@ import React from "react";
 
 import { Typography } from "@material-ui/core";
 import Emoji from "../Components/Emoji";
-import BigButton from "../Components/BigButton";
+import RoundedBtn1 from "../Components/RoundedBtn1";
 
-export default function Login() {
+function Login() {
   return (
     <div className="LoginPage">
       <Typography variant="subtitle1">
@@ -14,7 +14,9 @@ export default function Login() {
       <Typography variant="subtitle2">
         <b>Only premium users!!!</b> <Emoji symbol="🧐" />
       </Typography>
-      <BigButton label="Login" href="http://localhost:8888/login" />
+      <RoundedBtn1 label="Login" href="http://localhost:8888/login" />
     </div>
   );
 }
+
+export default Login;

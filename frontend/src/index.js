@@ -2,30 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import "./index.css";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 import App from "./App";
 
 import * as serviceWorker from "./serviceWorker";
 import { AuthProvider } from "./Auth/Context";
 
-// App theme
-const theme = createMuiTheme({
-  palette: {
-    // primary: purple,
-    secondary: {
-      main: "#1ED761",
-    },
-  },
-  typography: {
-    fontFamily: `"Montserrat", sans-serif`,
-  },
-});
-
 ReactDOM.render(
   <AuthProvider>
-    <MuiThemeProvider theme={theme}>
-      <App />
-    </MuiThemeProvider>
+    <App />
   </AuthProvider>,
   document.getElementById("root")
 );

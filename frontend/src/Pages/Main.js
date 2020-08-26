@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import PrivateRoute from "../Auth/PrivateRoute";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import RoomSelect from "./RoomSelect";
 import Room from "./Room";
 
 import socket from "../Utils/Socket";
 
-export class Main extends Component {
+class Main extends Component {
   constructor(props) {
     super(props);
 
@@ -27,12 +26,17 @@ export class Main extends Component {
               <RoomSelect
                 {...props}
                 onCreateRoom={this.state.client.createRoom}
-                joinRoomHandler={this.state.client.joinRoomHandler}
-                onLogout={this.state.client.disconnect}
+                registerJoinHandler={this.state.client.registerJoinHandler}
+                unregisterJoinHandler={this.state.client.unregisterJoinHandler}
+                onDisconnect={this.state.client.disconnect}
               />
             )}
           />
-          <Route exact path="/room/:roomID" component={Room} />
+          <Route
+            exact
+            path="/room/:roomID"
+            render={(props) => <Room {...props} client={this.state.client} />}
+          />
         </Switch>
       </BrowserRouter>
     );

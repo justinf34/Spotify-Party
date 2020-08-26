@@ -1,42 +1,50 @@
 import React, { Suspense } from "react";
 import "./App.css";
+
 import { useAuth } from "./Auth/Context";
 
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
-import PrivateRoute from "./Auth/PrivateRoute";
-
 import Emoji from "./Components/Emoji";
-// import { BrowserRouter, Switch, Route } from "react-router-dom";
 const Login = React.lazy(() => import("./Pages/Login"));
 const Main = React.lazy(() => import("./Pages/Main"));
+
+// App theme
+const theme = createMuiTheme({
+  // palette: {
+  //   // primary: purple,
+  //   secondary: {
+  //     main: "#1ED761",
+  //   },
+  // },
+  typography: {
+    fontFamily: `"Montserrat", sans-serif`,
+  },
+});
 
 export default function App() {
   const { loggedIn } = useAuth();
   return (
-    <div className="App">
-      <header className="MainHeader">
-        <Typography variant="h2" gutterBottom>
-          Spotify Party <Emoji symbol="🥳" />
-          <Emoji symbol="🎵" />
-        </Typography>
-      </header>
-      <div className="MainBody">
-        <Suspense
-          fallback={
-            <div>
-              <img src={require("./assets/loading.svg")} alt="loading..." />
-            </div>
-          }
-        >
-          {/* <BrowserRouter>
-            <Switch>
-              <PrivateRoute exact path="/" component={Main} />
-              <Route exact paht="/login" component={Login} />
-            </Switch>
-          </BrowserRouter> */}
-          {loggedIn ? <Main /> : <Login />}
-        </Suspense>
+    <MuiThemeProvider theme={theme}>
+      <div className="App">
+        <header className="MainHeader">
+          <Typography variant="h2">
+            Spotify Party <Emoji symbol="🥳" />
+            <Emoji symbol="🎵" />
+          </Typography>
+        </header>
+        <div className="MainBody">
+          <Suspense
+            fallback={
+              <div>
+                <img src={require("./assets/loading.svg")} alt="loading..." />
+              </div>
+            }
+          >
+            {loggedIn ? <Main /> : <Login />}
+          </Suspense>
+        </div>
       </div>
-    </div>
+    </MuiThemeProvider>
   );
 }

@@ -14,7 +14,7 @@ const StyledButton = styled(Button)({
   padding: "0 50px",
 });
 
-export default function BigButton(props) {
+export default function RoundedBtn1(props) {
   return (
     <StyledButton
       {...(props.href ? { href: props.href } : {})}
@@ -26,13 +26,13 @@ export default function BigButton(props) {
   );
 }
 
-BigButton.propTypes = {
+RoundedBtn1.propTypes = {
   label: PropTypes.string.isRequired,
   href: PropTypes.string,
   onClick: PropTypes.func,
 };
 
-BigButton.defaultPropts = {
+RoundedBtn1.defaultPropts = {
   href: null,
   onClick: null,
 };

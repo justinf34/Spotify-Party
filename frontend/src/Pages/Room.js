@@ -1,24 +1,35 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-
+import { useAuth } from "../Auth/Context";
 import Chat from "../Components/Chat";
-import { Paper, Typography } from "@material-ui/core";
+import Button1 from "../Components/Button1";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
-export default function Room(props) {
+function Room(props) {
   const { roomID } = useParams();
-  console.log(props.history.location);
+  const { user, logout } = useAuth();
+
+  const toRoomSelect = () => {
+    props.history.replace("/");
+  };
+
+  // componentWillUnmount()?????
+
   return (
-    <React.Fragment>
-      <Chat />
-    </React.Fragment>
+    <div className="RoomLayout">
+      <div className="RoomLayoutHeader">
+        <Button1
+          startIcon={<ArrowBackIosIcon />}
+          onClick={toRoomSelect}
+          label="Room Select"
+        />
+        <Button1 label="Logout" onClick={logout} />
+      </div>
+      <div className="RoomLayoutBody">
+        <Chat client={this.props.client} roomID={roomID} user={user} />
+      </div>
+    </div>
   );
 }
 
-/**
- * TO DO:
- *  - Create header wiht logout and back to room select
- *  - Show message of person leaving the room
- *  - Get all messages from DB
- *  - Figure out how to show when users joins the room
- *  - Test Chat
- */
+export default Room;

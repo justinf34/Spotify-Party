@@ -8,15 +8,17 @@ export function AuthProvider({ children }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
-  /**
-   *
-   */
+  // User logout handler
   const logout = () => {
     //clear Cookies
     Cookies.set("spotifyAuthToken", undefined);
     Cookies.set("spotifyRefreshToken", undefined);
+
+    // clear AutProvider states
     setLoggedIn(false);
     setUser(null);
+
+    window.history.go("/"); // Redirect to main page
   };
 
   useEffect(() => {
@@ -49,4 +51,5 @@ export function AuthProvider({ children }) {
   );
 }
 
+// Hook for using context for authentication
 export const useAuth = () => React.useContext(AuthContext);

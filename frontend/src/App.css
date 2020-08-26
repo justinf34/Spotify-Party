@@ -2,19 +2,54 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
 }
 
 .MainHeader {
-  height: 10%;
-  margin-top: 2%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .MainBody {
-  height: 90%;
+  height: 80%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.RoomSelectLayout {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.RoomLayout {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.RoomLayoutHeader {
+  height: 5%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.RoomLayoutBody {
+  height: 90%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }

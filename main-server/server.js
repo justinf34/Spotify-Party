@@ -26,6 +26,8 @@ io.on("connection", function (socket) {
    *
    */
   socket.on("createRoom", (client_name) => {
+    console.log("Client", socket.id, "requested to make a new room");
+
     roomManager.createNewRoom(socket.id, client_name).then((res) => {
       if (res) {
         socket.emit("join", { room_id: res, host: true });

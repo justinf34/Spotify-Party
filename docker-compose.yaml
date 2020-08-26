@@ -1,0 +1,11 @@
+version: "3"
+services:
+  auth-server:
+    build: ./auth-server/
+    ports:
+      - "8888:8888"
+
+  main-server:
+    build: ./main-server/
+    ports:
+      - "8889:8889"

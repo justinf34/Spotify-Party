@@ -26,6 +26,7 @@ class Main extends Component {
               <RoomSelect
                 {...props}
                 onCreateRoom={this.state.client.createRoom}
+                onJoin={this.state.client.onJoin}
                 registerJoinHandler={this.state.client.registerJoinHandler}
                 unregisterJoinHandler={this.state.client.unregisterJoinHandler}
                 onDisconnect={this.state.client.disconnect}
@@ -35,7 +36,15 @@ class Main extends Component {
           <Route
             exact
             path="/room/:roomID"
-            render={(props) => <Room {...props} client={this.state.client} />}
+            render={(props) => (
+              <Room
+                {...props}
+                registerMsgReceiver={this.state.client.registerMsgReceiver}
+                unregisterMsgReceiver={this.state.client.unregsisterMsgReceiver}
+                onSendMessage={this.state.client.onSendMessage}
+                leaveRoom={this.state.client.leaveRoom}
+              />
+            )}
           />
         </Switch>
       </BrowserRouter>

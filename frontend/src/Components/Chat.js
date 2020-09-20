@@ -14,7 +14,6 @@ import {
 } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 
-import messages from "./messages";
 import { getChatHistory } from "../Utils/Queries";
 
 const MessageField = withStyles({
@@ -32,9 +31,9 @@ const MessageField = withStyles({
 
 const useStyles = (theme) => ({
   root: {
-    width: "45%",
     height: "100%",
     display: "flex",
+    flex: 1,
     flexDirection: "column",
   },
   chatHeader: {
@@ -48,6 +47,7 @@ const useStyles = (theme) => ({
   },
   chatPanel: {
     height: "80%",
+    width: "100%",
     overflow: "auto",
   },
 
@@ -69,7 +69,6 @@ class Chat extends Component {
     super(props);
 
     this.state = {
-      roomID: null,
       messages: [],
       input: "",
     };
@@ -81,9 +80,32 @@ class Chat extends Component {
     this.onSendMessage = this.onSendMessage.bind(this);
   }
 
-  // Scroll to the newest message of the chat
-  scrollToChatBottom() {
-    this.panel.scrollTo(0, this.panel.scrollHeight);
+  componentDidMount() {
+    // Get messages from the DB
+    console.log("Retrieving chat history...");
+    getChatHistory(this.props.roomID)
+      .then((res) => {
+        console.log("Chat history retrieved");
+        this.setState({
+          messages: res,
+        });
+      })
+      .catch((err) => {
+        alert(`Error at Chat.js ComponentDidMount() => ${err}`);
+      });
+
+    this.props.registerMsgReceiver(this.onMessageReceive); // Register onMessageReceive
+
+    this.scrollToChatBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToChatBottom();
+  }
+
+  componentWillUnmount() {
+    console.log("Usubscribing to message receiver...");
+    this.props.unregisterMsgReceiver(); // unregister onMessageReceive
   }
 
   // Keep track of the current input of the client in their message field
@@ -103,9 +125,9 @@ class Chat extends Component {
       message: this.state.input,
     };
 
-    this.props.client.onSendMessage(this.props.roomID, msg, (err) => {
+    this.props.onSendMessage(this.props.roomID, msg, (err) => {
       if (err) {
-        return console.log(err);
+        return console.log(err); // Have an alert when you cant send a message
       }
 
       return this.setState({
@@ -119,39 +141,13 @@ class Chat extends Component {
   onMessageReceive(entry) {
     console.log("onMessageReceived: " + entry);
     this.setState({
-      messages: this.state.messages.concat(entry),
+      messages: this.state.messages.push(entry),
     });
   }
 
-  componentDidMount() {
-    // Get messages from the DB
-    getChatHistory()
-      .then((res) => {
-        this.setState({
-          messages: res,
-        });
-      })
-      .catch((err) => {
-        alert(err);
-      });
-
-    // Register onMessageReceive
-    this.props.client.registerMsgReceiver(this.onMessageReceive);
-
-    // Send the message that this user joined??
-
-    this.scrollToChatBottom();
-  }
-
-  componentDidUpdate() {
-    this.scrollToChatBottom();
-  }
-
-  componentWillUnmount() {
-    // unregister onMessageReceive
-    this.props.client.unregisterMsgReceiver();
-
-    // tell room that user is leaving???
+  // Scroll to the newest message of the chat
+  scrollToChatBottom() {
+    this.panel.scrollTo(0, this.panel.scrollHeight);
   }
 
   render() {
@@ -169,7 +165,7 @@ class Chat extends Component {
           }}
         >
           <List>
-            {messages.map((entry, index) => (
+            {this.state.messages.map((entry, index) => (
               <ListItem key={index}>
                 {entry.type === "message" ? (
                   <>
@@ -207,11 +203,9 @@ class Chat extends Component {
 
         <div className={classes.inputBlock}>
           <MessageField
-            underlineShow={false}
             variant="outlined"
             placeholder="Type a message.."
             InputProps={{
-              disableUnderline: true,
               style: { fontSize: "14px", height: "90%" },
             }}
             style={{
@@ -221,9 +215,9 @@ class Chat extends Component {
             }}
             onChange={this.onInput}
             value={this.state.input}
-            // onKeyPress={(e) => {
-            //   e.key === "Enter" ? this.onSendMessage() : null;
-            // }}
+            onKeyPress={(e) =>
+              e.key === "Enter" ? this.onSendMessage() : null
+            }
           />
 
           <IconButton

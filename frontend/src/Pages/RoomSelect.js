@@ -23,17 +23,37 @@ class RoomSelect extends Component {
     this.state = {
       loaderOn: false,
       alertOpen: false,
+      input: "",
     };
 
-    this.onCreateRoom = this.onCreateRoom.bind(this);
-    this.onLogout = this.onLogout.bind(this);
-    this.onJoinRoom = this.onJoinRoom.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.onInput = this.onInput.bind(this);
+
+    this.onJoin = this.onJoin.bind(this);
+    this.onCreateRoom = this.onCreateRoom.bind(this);
+    this.onJoinRes = this.onJoinRes.bind(this);
+
+    this.onLogout = this.onLogout.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.registerJoinHandler(this.onJoinRes);
+  }
+
+  componentWillUnmount() {
+    this.props.unregisterJoinHandler(); // Disable joinRoomHandler
   }
 
   // Handler for closing error notification
   handleClose(event, reason) {
     this.setState({ alertOpen: false });
+  }
+
+  // Keep track of the current input of the client in their message field
+  onInput(e) {
+    this.setState({
+      input: e.traget.value,
+    });
   }
 
   // Handler request of room creation by the client
@@ -44,16 +64,22 @@ class RoomSelect extends Component {
     });
   }
 
-  // Handler on join room attempt
-  onJoinRoom(res) {
-    console.log("joinRoom Received!");
-    console.log(res);
+  // Handler when user wants to join a room
+  onJoin() {
+    this.props.onJoin(this.state.input, this.context.user);
+    this.setState({
+      loaderOn: true,
+    });
+  }
+
+  // Handler for join/create response
+  onJoinRes(res) {
+    console.log(`Join Response => ${res}`);
     if (res) {
-      // this.props.history.replace({
-      //   pathname: `/room/${res.room_id}`,
-      //   state: { host: res.host },
-      // });
-      this.props.history.push("/room/8888");
+      this.props.history.replace({
+        pathname: `/room/${res.room_id}`,
+        state: { host: res.host },
+      });
     } else {
       this.setState({
         loaderOn: false,
@@ -66,14 +92,6 @@ class RoomSelect extends Component {
   onLogout() {
     this.props.onDisconnect(); // Disconnect socket manually
     this.context.logout(); // clear cookies and logout user
-  }
-
-  componentDidMount() {
-    this.props.registerJoinHandler(this.onJoinRoom);
-  }
-
-  componentWillUnmount() {
-    this.props.unregisterJoinHandler(); // Disable joinRoomHandler
   }
 
   render() {
@@ -106,6 +124,9 @@ class RoomSelect extends Component {
                   label="Join Room #"
                   variant="outlined"
                   color="secondary"
+                  onChange={this.onInput}
+                  value={this.state.input}
+                  onKeyPress={(e) => (e.key === "Enter" ? this.onJoin : null)}
                 />
               </form>
             </React.Fragment>

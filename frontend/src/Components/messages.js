@@ -11,7 +11,7 @@ const messages = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc massa.",
   },
   {
-    author: "makImBeache",
+    author: "makImBeacher",
     type: "announcement",
   },
   {

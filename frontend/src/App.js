@@ -11,12 +11,6 @@ const Main = React.lazy(() => import("./Pages/Main"));
 
 // App theme
 const theme = createMuiTheme({
-  // palette: {
-  //   // primary: purple,
-  //   secondary: {
-  //     main: "#1ED761",
-  //   },
-  // },
   typography: {
     fontFamily: `"Montserrat", sans-serif`,
   },

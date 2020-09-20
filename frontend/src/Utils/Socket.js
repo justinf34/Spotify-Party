@@ -7,7 +7,6 @@ export default function () {
 
   socket.on("connect", (data) => {
     console.log("You have connected to the main server!");
-    console.log(data);
   });
 
   socket.on("error", (err) => {
@@ -18,8 +17,12 @@ export default function () {
     socket.emit("createRoom", clientName);
   }
 
+  function onJoin(roomID, userName) {
+    socket.emit("join", { roomID, userName });
+  }
+
   function registerJoinHandler(onJoinRoom) {
-    socket.on("join", onJoinRoom);
+    socket.on("joinRes", onJoinRoom);
   }
 
   function unregisterJoinHandler() {
@@ -36,7 +39,12 @@ export default function () {
   }
 
   function onSendMessage(roomID, msg, cb) {
-    socket.to(roomID).emit("message", msg, cb);
+    socket.emit("sendMsg", { roomID, msg }, cb);
+  }
+
+  function leaveRoom(roomID) {
+    console.log("Leaving the room...");
+    socket.emit("leave", roomID);
   }
 
   function testServer(msg) {
@@ -49,6 +57,7 @@ export default function () {
 
   return {
     createRoom,
+    onJoin,
     testServer,
     disconnect,
     registerJoinHandler,
@@ -56,5 +65,6 @@ export default function () {
     registerMsgReceiver,
     unregsisterMsgReceiver,
     onSendMessage,
+    leaveRoom,
   };
 }

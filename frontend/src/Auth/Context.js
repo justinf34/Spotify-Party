@@ -25,7 +25,6 @@ export function AuthProvider({ children }) {
     const params = getHashParams();
     window.history.replaceState({}, null, "/"); // Replace the history entry to remove the auth code from the url bar
     const access_token = params.access_token;
-    console.log(access_token);
     const refresh_token = params.refresh_token;
 
     // Set the cookies
